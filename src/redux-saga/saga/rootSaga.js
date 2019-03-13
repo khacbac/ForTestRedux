@@ -1,10 +1,8 @@
-import { all } from 'redux-saga/effects';
+import { all } from "redux-saga/effects";
 
-import { watchIncrement, watchDecrement } from './counterSagas';
+import { watchIncrement, watchDecrement } from "./counterSagas";
+import { watchFetchUser } from "./userSage";
 
 export default function* rootSaga() {
-    yield all([
-        watchIncrement(),
-        watchDecrement(),
-    ]);
+  yield all([watchIncrement(), watchDecrement(), watchFetchUser()]);
 }

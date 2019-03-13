@@ -13,11 +13,12 @@ import {
   Text,
   View,
   SafeAreaView,
-  TouchableOpacity
+  TouchableOpacity,
+  ActivityIndicator
 } from "react-native";
 import { connect } from "react-redux";
-import { actionDecrement, actionIncrement } from "../redux";
-
+import { actionDecrement, actionIncrement, fetchUser } from "../redux";
+import { API_TYPE } from "../../api/FakeApi";
 class ReduxSagaScreen extends Component {
   constructor(props) {
     super(props);
@@ -64,6 +65,20 @@ class ReduxSagaScreen extends Component {
               Decrement +
             </Text>
           </TouchableOpacity>
+
+          <TouchableOpacity
+            onPress={() => {
+              this.props.fetchUser();
+            }}
+          >
+            <Text
+              style={{
+                fontSize: 16
+              }}
+            >
+              Fetch
+            </Text>
+          </TouchableOpacity>
         </View>
         <View
           style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
@@ -75,6 +90,13 @@ class ReduxSagaScreen extends Component {
           >
             {`Count ${this.props.count}`}
           </Text>
+          {this.props.loadingStatus == API_TYPE.LOADING && (
+            <ActivityIndicator
+              size="large"
+              color="red"
+              style={{ ...StyleSheet.absoluteFillObject }}
+            />
+          )}
         </View>
       </SafeAreaView>
     );
@@ -83,13 +105,16 @@ class ReduxSagaScreen extends Component {
 
 const mapStateToProps = state => {
   return {
-    count: state.rCount.count
+    count: state.rCount.count,
+    users: state.rUser.userResponse.users,
+    loadingStatus: state.rUser.userResponse.loadingStatus
   };
 };
 const mapDispatchToProps = dispatch => {
   return {
     actionIncrement: step => dispatch(actionIncrement(step)),
-    actionDecrement: step => dispatch(actionDecrement(step))
+    actionDecrement: step => dispatch(actionDecrement(step)),
+    fetchUser: () => dispatch(fetchUser())
   };
 };
 
